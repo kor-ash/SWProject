@@ -6,23 +6,32 @@ import Header from './Header';
 function App() {
   const [utensil, setUtensil] = useState({
     tool: "brush",
-    weight: "normal",
+    weight: 50,
     color: "black"
   })
   const handleUtensil = (updateItem, holder) => {
     const newUtensil = { ...utensil }
-    if (updateItem === "eraser") {
+    if (updateItem === 'eraser') {
       newUtensil["color"] = "white"
       newUtensil["tool"] = "brush"
+      newUtensil["weight"] = 40
     }
-    else
-      newUtensil[holder] = updateItem.toLowerCase();
+    else {
+      if (holder !== "weight")
+        newUtensil[holder] = updateItem.toLowerCase();
+      else
+        newUtensil[holder] = updateItem;
+    }
     setUtensil(newUtensil)
   }
   return (
     <>
-      <Header handleUtensil={handleUtensil} />
-      <Container utensil={utensil} />
+      <div style={{ display: "flex" }}>
+        <div>
+          <Header handleUtensil={handleUtensil} />
+          <Container utensil={utensil} />
+        </div>
+      </div>
     </>
   );
 }

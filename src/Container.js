@@ -6,16 +6,25 @@ const Container = ({ utensil }) => {
     const [isDrawing, setIsDrawing] = useState(false);
     const [ctx, setCtx] = useState();
     useEffect(() => {
+        //alert(utensil["weight"])
         const canvas = canvasRef.current;
-        canvas.width = 800;
+        canvas.width = window.innerHeight * 0.65;
         canvas.height = window.innerHeight * 0.4;
         const context = canvas.getContext("2d");
         context.strokeStyle = "black";
-        context.lineWidth = 2.5;
+        context.lineWidth = 15;
         contextRef.current = context;
         setCtx(contextRef.current);
 
     }, [])
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        const context = canvas.getContext("2d");
+        context.strokeStyle = utensil["color"];
+        context.lineWidth = utensil["weight"];
+        contextRef.current = context;
+        setCtx(contextRef.current);
+    }, [utensil])
     const startDrawing = () => {
         setIsDrawing(true)
     }

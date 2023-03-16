@@ -1,0 +1,10 @@
+button#btn-brush-click:active {
+    cursor: default;
+    box-shadow: 3px 3px 3px black;
+    transition-duration: 0.3s;
+    background-color: black;
+}
+
+button#btn-brush-non-click {
+    background-color: red;
+}
