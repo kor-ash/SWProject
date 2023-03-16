@@ -1,24 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+
+import { useState } from 'react';
+import Container from './Container';
+import Header from './Header';
 
 function App() {
+  const [utensil, setUtensil] = useState({
+    tool: "brush",
+    weight: "normal",
+    color: "black"
+  })
+  const handleUtensil = (updateItem, holder) => {
+    const newUtensil = { ...utensil }
+    if (updateItem === "eraser") {
+      newUtensil["color"] = "white"
+      newUtensil["tool"] = "brush"
+    }
+    else
+      newUtensil[holder] = updateItem.toLowerCase();
+    setUtensil(newUtensil)
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Header handleUtensil={handleUtensil} />
+      <Container utensil={utensil} />
+    </>
   );
 }
 
