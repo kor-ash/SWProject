@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
-const Brush = ({ handleUtensil }) => {
-    const [brush, setBrush] = useState(10);
+const Size = ({ curSize, setCurSize, handleUtensil }) => {
     const onChange = (val) => {
-        setBrush(val)
+        setCurSize(val)
     }
     useEffect(() => {
-        handleUtensil(brush, "weight");
-    }, [brush])
+        handleUtensil(curSize, "weight");
+    }, [curSize])
     /*
             <select onChange={(e) => handleUtensil(e.target.name, "weight")} id="brush-detail">
                 <option>Thin</option>
@@ -17,10 +16,10 @@ const Brush = ({ handleUtensil }) => {
     */
     return (
         <div style={{ display: 'flex' }}>
-            {brush}
-            <input onChange={(e) => onChange(e.target.value)} type="range" min="1" max="50" value={brush} />
+            {curSize}
+            <input onChange={(e) => onChange(e.target.value)} type="range" min="1" max="50" value={curSize} />
         </div>
     );
 };
 
-export default Brush;
+export default Size;
