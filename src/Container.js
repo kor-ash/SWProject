@@ -8,9 +8,15 @@ const Vector = ({ x, y, dx, dy, ctx }) => {
     ctx.moveTo(x, y);
     ctx.lineTo(x + dx, y + dy);
     ctx.stroke();
-    ctx.closePath()
+    ctx.closePath();
 }
+const Circle = ({ sx, sy, rad, ctx }) => {
+    ctx.beginPath();
+    ctx.arc(sx, sy, rad, 0, 2 * Math.PI)
+    ctx.stroke();
+    ctx.closePath();
 
+}
 const Container = ({ curTool, handleUtensil, utensil }) => {
     const canvasRef = useRef(null);
     const dupRef = useRef(null);
@@ -20,11 +26,13 @@ const Container = ({ curTool, handleUtensil, utensil }) => {
     const [ctx, setCtx] = useState();
     const [dupCtx, setDupCtx] = useState();
     const [startPoint, setStartPoint] = useState({ x: 0, y: 0 })
-
+    const [rad, setRad] = useState(0)
+    const [selectedVector, setSelectedVector] = useState(null);
+    const [vectors, setVectors] = useState([])
     useEffect(() => {
         const canvas = canvasRef.current;
-        canvas.width = window.innerHeight * 0.65;
-        canvas.height = window.innerHeight * 0.4;
+        canvas.width = window.innerHeight;
+        canvas.height = 800
         const context = canvas.getContext("2d");
         context.strokeStyle = "black";
         context.lineWidth = 15;
@@ -35,8 +43,8 @@ const Container = ({ curTool, handleUtensil, utensil }) => {
 
         const dupCanvas = dupRef.current;
 
-        dupCanvas.width = window.innerHeight * 0.65;
-        dupCanvas.height = window.innerHeight * 0.4;
+        dupCanvas.width = window.innerHeight;
+        dupCanvas.height = window.innerHeight;
         const dupContext = dupCanvas.getContext("2d");
         dupContextRef.current = dupContext;
         setDupCtx(dupContextRef.current);
@@ -61,7 +69,7 @@ const Container = ({ curTool, handleUtensil, utensil }) => {
                 ctx.beginPath();
                 ctx.moveTo(offsetX, offsetY);
             }
-            else {
+            else if (utensil["tool"] === "vector" || utensil["tool"] === "circle") {
                 setStartPoint({ x: offsetX, y: offsetY })
             }
         }
@@ -84,6 +92,8 @@ const Container = ({ curTool, handleUtensil, utensil }) => {
         const dy = offsetY - startPoint.y;
         setIsDrawing(false);
         if (curTool === "vector") {
+            const tmpvector = [...vectors, { sx: startPoint.x, sy: startPoint.y, ex: offsetX, ey: offsetY }]
+            setVectors(tmpvector)
             updateVector({ nativeEvent })
         }
         dupContext.drawImage(canvas, 0, 0);
@@ -107,16 +117,24 @@ const Container = ({ curTool, handleUtensil, utensil }) => {
                     Vector({ x: startPoint.x, y: startPoint.y, dx: newDx, dy: newDy, ctx });
                 }
             }
+            else if (utensil["tool"] === "circle") {
+                if (isDrawing) {
+                    const rad = Math.sqrt((offsetX - startPoint.x) ** 2 + (offsetY - startPoint.y) ** 2);
+                    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+                    ctx.drawImage(dupRef.current, 0, 0);
+                    Circle({ sx: offsetX, sy: offsetY, rad: rad, ctx: ctx });
+                }
+            }
         }
     };
     return (
-        <div>
+        <div style={{ display: "flex" }}>
             <canvas
                 ref={canvasRef}
                 onMouseDown={startDrawing}
                 onMouseUp={endDrawing}
                 onMouseMove={drawing}
-                style={{ border: "solid" }}
+                style={{ border: "solid", backgroundColor: "white" }}
             ></canvas>
             <canvas id="c2" ref={dupRef} style={{ border: "solid", display: "none" }}></canvas>
         </div>

@@ -2,7 +2,9 @@
 import { useState } from 'react';
 import Container from './Container';
 import Header from './Header';
-
+import Sidebar from './Sidebar';
+import styles from './App.css';
+import SidebarHeader from './SidebarHeader';
 function App() {
   const [curTool, setCurTool] = useState("brush")
   const [curSize, setCurSize] = useState(10);
@@ -30,9 +32,13 @@ function App() {
   return (
     <>
       <div style={{ display: "flex" }}>
-        <div>
+        <div style={{ marginTop: "2%", marginLeft: "20%", marginRight: "0.01%" }}>
           <Header curTool={curTool} setCurTool={setCurTool} curSize={curSize} setCurSize={setCurSize} handleUtensil={handleUtensil} curColor={curColor} setCurColor={setCurColor} />
           <Container curTool={curTool} setCurTool={setCurTool} utensil={utensil} handleUtensil={handleUtensil} />
+        </div>
+        <div>
+          <SidebarHeader></SidebarHeader>
+          <Sidebar></Sidebar>
         </div>
       </div>
     </>
