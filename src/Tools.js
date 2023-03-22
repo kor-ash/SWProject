@@ -55,6 +55,10 @@ const Tools = ({ curSize, setCurSize, curTool, setCurTool, handleUtensil, setCur
                 boxShadow: curTool === "eraser" ? '0 0 10px 3px rgba(0, 0, 0, 0.2)' : 'none',
                 border: curTool === "eraser" ? '1.5px solid black' : 'none',
             }} id="btn-eraser" name="eraser" onClick={(e) => onClick(e)}>❌</button>
+            <button style={{
+                boxShadow: curTool === "grab" ? '0 0 10px 3px rgba(0, 0, 0, 0.2)' : 'none',
+                border: curTool === "grab" ? '1.5px solid black' : 'none',
+            }} id="btn-grab" name="grab" onClick={(e) => onClick(e)}>✋</button>
         </div>
     );
 };
