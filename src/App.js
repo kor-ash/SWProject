@@ -38,7 +38,7 @@ function App() {
         </div>
         <div>
           <SidebarHeader></SidebarHeader>
-          <Sidebar></Sidebar>
+          <Sidebar />
         </div>
       </div>
     </>
