@@ -15,7 +15,7 @@ function Header({ curTool, setCurTool, curSize, setCurSize, handleUtensil, curCo
             <select onChange={(e) => onSelect(e)} value={curTool}>
                 <option >brush</option>
                 <option >vector</option>
-                <option>elipse</option>
+                <option>grab</option>
                 <option>circle</option>
                 <option>Rectangle</option>
                 <option>eraser</option>

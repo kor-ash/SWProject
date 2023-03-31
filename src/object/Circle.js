@@ -5,7 +5,8 @@ class Circle extends Objects {
         super(ctx, props)
     }
     draw() {
-        const { sx, sy, rad, color, size, isClicked } = this.props;
+        const { sx, sy, rad, color, size } = this.props;
+        const isClicked = this.isClicked;
         if (isClicked) {
             this.ctx.strokeStyle = "red";
         }
