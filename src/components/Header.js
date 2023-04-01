@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Size from './Size';
 import ColorContainer from './ColorContainer';
 import Tools from './Tools';
-import styles from './Header.css'
+import styles from '../assets/styles/Header.css'
 function Header({ curTool, setCurTool, curSize, setCurSize, handleUtensil, curColor, setCurColor }) {
     const onSelect = (e) => {
         handleUtensil(e.target.value, "tool")

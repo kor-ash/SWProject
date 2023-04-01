@@ -1,8 +1,8 @@
 import { React, useState } from 'react';
-import brushCursor from './images/brush-cursor.png';
-import bucketCursor from './images/bucket-cursor.png';
-import eraserCursor from './images/eraser-cursor.png';
-import styles from './Tool.css';
+import brushCursor from '../assets/images/brush-cursor.png';
+import bucketCursor from '../assets/images/bucket-cursor.png';
+import eraserCursor from '../assets/images/eraser-cursor.png';
+import styles from '../assets/styles/Tool.css';
 
 const Tools = ({ curSize, setCurSize, curTool, setCurTool, handleUtensil, setCurColor }) => {
 

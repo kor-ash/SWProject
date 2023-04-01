@@ -1,9 +1,9 @@
 import { is } from '@react-spring/shared';
 import React, { useEffect, useRef, useState } from 'react';
-import CanvasContext from './CanvasContext';
-import { CompositeObject } from './CompositeObject';
-import { ObjectsFactory } from './factory/ObjectsFactory';
-import { findClickedCircle, findClickedVector } from './Util';
+import CanvasContext from '../features/canvas/CanvasContext';
+import { CompositeObject } from '../components/CompositeObject';
+import { ObjectsFactory } from '../factory/ObjectsFactory';
+import { findClickedCircle, findClickedVector } from '../Util';
 const init = (canvasAarray) => {
     canvasAarray.forEach((canvas) => {
         canvas.width = window.innerHeight * 1.1;
@@ -45,9 +45,8 @@ const Container = ({ curTool, handleUtensil, utensil }) => {
     }, [utensil]);
 
     useEffect(() => {
-        compositeObject.draw()
+        compositeObject.draw();
     }, [selectedVector, selectedCircle])
-
     //startDrawing
     const onMouseDown = ({ nativeEvent }) => {
         const { offsetX, offsetY } = nativeEvent;
@@ -69,7 +68,7 @@ const Container = ({ curTool, handleUtensil, utensil }) => {
         if (!isClickedVector && !isClickedCircle) {
             if (selectedVector || selectedCircle) { //선택한 건 없지만, 선택한 벡터들이 있을때 풀어줘야함
                 compositeObject.objects.forEach((object) => {
-                    object.isClicked = false;
+                    object.props.isClicked = false;
                 })
                 setSelectedVector([])
                 setSelectedCircle([])
@@ -95,10 +94,12 @@ const Container = ({ curTool, handleUtensil, utensil }) => {
         else if (isClickedVector) {
             setIsDrawing(false)
             setIsMove(true)
-            setSelectedVector(compositeObject.objects.filter(object => object.props.type === 'vector' && object.isClicked));
+            console.log(compositeObject.objects)
+            console.log("선택", compositeObject.objects.filter(object => object.props.type === 'vector' && object.props.isClicked))
+            setSelectedVector(compositeObject.objects.filter(object => object.props.type === 'vector' && object.props.isClicked));
             compositeObject.objects.forEach((object) => {
                 if (object.props.type !== "vector")
-                    object.isClicked = false;
+                    object.props.isClicked = false;
             })
             setSelectedCircle([])
         } else if (isClickedCircle) {
@@ -106,10 +107,10 @@ const Container = ({ curTool, handleUtensil, utensil }) => {
             setIsDrawing(false);
             compositeObject.objects.forEach((object) => {
                 if (object.props.type !== "circle")
-                    object.isClicked = false;
+                    object.props.isClicked = false;
             })
             setSelectedVector([])
-            setSelectedCircle(compositeObject.objects.filter(object => object.props.type === 'circle' && object.isClicked));
+            setSelectedCircle(compositeObject.objects.filter(object => object.props.type === 'circle' && object.props.isClicked));
         }
     }
     const onMouseMove = ({ nativeEvent }) => {

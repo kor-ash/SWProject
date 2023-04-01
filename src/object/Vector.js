@@ -6,13 +6,14 @@ class Vector extends Objects {
     }
 
     draw() {
-        const { sx, sy, ex, ey, color, size } = this.props;
-        const isClicked = this.isClicked
-        if (isClicked) {
+        const { sx, sy, ex, ey, color, size, isClicked } = this.props;
+        //const isClicked = this.isClicked
+        if (isClicked === true) {
             this.ctx.strokeStyle = "red";
         }
-        else
+        else {
             this.ctx.strokeStyle = color;
+        }
         this.ctx.lineWidth = size;
         this.ctx.beginPath();
         this.ctx.moveTo(sx, sy);

@@ -16,7 +16,7 @@ const findClickedVector = (vectors, clickedX, clickedY) => {
         const dist = dis({ sx: sx, sy: sy, ex: ex, ey: ey, tx: clickedX, ty: clickedY })
         if (dist < 10) {
             res = true
-            vector.isClicked = true
+            vector.props.isClicked = true
         }
     });
     return res
@@ -28,7 +28,7 @@ const findClickedCircle = (circles, clickedX, clickedY) => {
         const dist = Math.sqrt((clickedX - sx) ** 2 + (clickedY - sy) ** 2)
         if (Math.abs(dist - rad) < 10) {
             res = true
-            circle.isClicked = true;
+            circle.props.isClicked = true;
         }
     })
     return res

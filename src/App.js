@@ -1,10 +1,12 @@
 
 import { useState } from 'react';
-import Container from './Container';
-import Header from './Header';
-import Sidebar from './Sidebar';
-import styles from './App.css';
-import SidebarHeader from './SidebarHeader';
+import Header from './components/Header';
+import Sidebar from './components/Sidebar';
+import styles from './assets/styles/App.css';
+import SidebarHeader from './components/SidebarHeader';
+import Container from './components/Container';
+import store from './store';
+import { Provider, useSelector } from 'react-redux';
 function App() {
   const [curTool, setCurTool] = useState("brush")
   const [curSize, setCurSize] = useState(10);
@@ -30,7 +32,7 @@ function App() {
     setUtensil(newUtensil)
   }
   return (
-    <>
+    <Provider store={store}>
       <div style={{ display: "flex" }}>
         <div style={{ marginTop: "2%", marginLeft: "20%", marginRight: "0.01%" }}>
           <Header curTool={curTool} setCurTool={setCurTool} curSize={curSize} setCurSize={setCurSize} handleUtensil={handleUtensil} curColor={curColor} setCurColor={setCurColor} />
@@ -41,7 +43,7 @@ function App() {
           <Sidebar />
         </div>
       </div>
-    </>
+    </Provider>
   );
 }
 
