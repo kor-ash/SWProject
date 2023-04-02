@@ -2,20 +2,20 @@ import { createSlice } from '@reduxjs/toolkit';
 const CanvasSlice = createSlice({
     name: 'canvas',
     initialState: {
-        selectedVector: [],
-        selectedCircle: [],
+        savedVector: [],
+        savedCircle: [],
         allObject: []
         //compositeObject: new CompositeObject(),
     },
     reducers: {
         updateSelectedVector(state, action) {
-            state.selectedVector = action.payload;
+            state.savedVector = action.payload;
         },
         updateSelectedCircle(state, action) {
-            state.selectedCircle = action.payload;
+            state.savedCircle = action.payload;
         },
         updateAllObject(state, action) {
-            state.object = action.payload;
+            state.allObject = action.payload;
         }
         /*
         updateCompositeObject(state, action) {

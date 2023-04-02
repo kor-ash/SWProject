@@ -1,9 +1,10 @@
-import { is } from '@react-spring/shared';
 import React, { useEffect, useRef, useState } from 'react';
 import CanvasContext from '../features/canvas/CanvasContext';
 import { CompositeObject } from '../components/CompositeObject';
 import { ObjectsFactory } from '../factory/ObjectsFactory';
 import { findClickedCircle, findClickedVector } from '../Util';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateSelectedVector, updateSelectedCircle } from '../features/canvas/CanvasSlice';
 const init = (canvasAarray) => {
     canvasAarray.forEach((canvas) => {
         canvas.width = window.innerHeight * 1.1;
@@ -23,6 +24,8 @@ const Container = ({ curTool, handleUtensil, utensil }) => {
     const [selectedVector, setSelectedVector] = useState([]);
     const [selectedCircle, setSelectedCircle] = useState([]);
     const [isMove, setIsMove] = useState(true)
+    const { savedVector, savedCircle } = useSelector(state => state.canvas)
+    const dispatch = useDispatch()
     useEffect(() => {
         const t = [canvasRef.current, dupRef.current, lineDupRef.current]
         init(t)
@@ -72,6 +75,8 @@ const Container = ({ curTool, handleUtensil, utensil }) => {
                 })
                 setSelectedVector([])
                 setSelectedCircle([])
+                dispatch(updateSelectedVector([]))
+                dispatch(updateSelectedCircle([]))
             }
             setIsMove(false)
             setIsDrawing(true);
@@ -94,9 +99,21 @@ const Container = ({ curTool, handleUtensil, utensil }) => {
         else if (isClickedVector) {
             setIsDrawing(false)
             setIsMove(true)
-            console.log(compositeObject.objects)
-            console.log("선택", compositeObject.objects.filter(object => object.props.type === 'vector' && object.props.isClicked))
-            setSelectedVector(compositeObject.objects.filter(object => object.props.type === 'vector' && object.props.isClicked));
+            const selVector = compositeObject.objects.filter(object => object.props.type === 'vector' && object.props.isClicked)
+            setSelectedVector(selVector);
+            const saveVector = selVector.map((object) => {
+                return {
+                    sx: object.props.sx,
+                    sy: object.props.sy,
+                    ex: object.props.ex,
+                    ey: object.props.ey,
+                    color: object.props.color,
+                    size: object.props.size,
+                    isClicked: object.isClicked
+                }
+            })
+            dispatch(updateSelectedVector(saveVector))
+            dispatch(updateSelectedCircle([]))
             compositeObject.objects.forEach((object) => {
                 if (object.props.type !== "vector")
                     object.props.isClicked = false;
@@ -105,12 +122,26 @@ const Container = ({ curTool, handleUtensil, utensil }) => {
         } else if (isClickedCircle) {
             setIsMove(true)
             setIsDrawing(false);
+            const selCircle = compositeObject.objects.filter(object => object.props.type === 'circle' && object.props.isClicked)
+            const saveCircle = selCircle.map((object) => {
+                return {
+                    sx: object.props.sx,
+                    sy: object.props.sy,
+                    rad: object.props.rad,
+                    color: object.props.color,
+                    size: object.props.size,
+                    isClicked: object.isClicked
+                }
+            })
             compositeObject.objects.forEach((object) => {
                 if (object.props.type !== "circle")
                     object.props.isClicked = false;
             })
             setSelectedVector([])
-            setSelectedCircle(compositeObject.objects.filter(object => object.props.type === 'circle' && object.props.isClicked));
+            setSelectedCircle(selCircle);
+
+            dispatch(updateSelectedCircle(saveCircle))
+            dispatch(updateSelectedVector([]))
         }
     }
     const onMouseMove = ({ nativeEvent }) => {

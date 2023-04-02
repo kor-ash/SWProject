@@ -31,8 +31,8 @@ function createWindow() {
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
     const win = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 1500,
+        height: 1500,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js')
         }

@@ -34,7 +34,7 @@ function App() {
   return (
     <Provider store={store}>
       <div style={{ display: "flex" }}>
-        <div style={{ marginTop: "2%", marginLeft: "20%", marginRight: "0.01%" }}>
+        <div style={{ marginTop: "2%", marginLeft: "10%" }}>
           <Header curTool={curTool} setCurTool={setCurTool} curSize={curSize} setCurSize={setCurSize} handleUtensil={handleUtensil} curColor={curColor} setCurColor={setCurColor} />
           <Container curTool={curTool} setCurTool={setCurTool} utensil={utensil} handleUtensil={handleUtensil} />
         </div>

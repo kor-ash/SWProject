@@ -13,49 +13,46 @@
     border: 1px solid black;
     background-color: grey;
 }
-
-h2 {
-    font-style: italic;
-    color: aliceblue;
-    margin-top: 5px;
+#sideBarBoxHeader{
+    border-bottom: 1px solid black;
 }
-
-#contentType {
+#sideBarTypeBox{
+    margin-left: 10%;
+    margin-top: 15px;
+    width: 80%;
+    height: 80px;
+    border: 1px solid black;
     background-color: white;
-    margin: 15px;
-    width: 270px;
+}
+#sideBarWidthBox {
+    margin-left: 10%;
+    margin-top: 15px;
+    width: 35%;
+    height: 80px;
+    border: 1px solid black;
+    background-color: white;
+}
+#sideBarHeightBox {
+    margin-left: 10%;
+    margin-top: 15px;
+    width: 35%;
+    height: 80px;
+    border: 1px solid black;
+    background-color: white;
+}
+#sideBarColorBox {
+    margin-left: 10%;
+    margin-top: 15px;
+    width: 35%;
     height: 100px;
     border: 1px solid black;
-}
-
-#contentWidth {
     background-color: white;
-    border: 1px solid black;
-    width: 130px;
-    height: 100px;
-    margin-left: 15px;
-    margin-right: 5px;
 }
-
-#contentHeight {
-    background-color: white;
-    width: 130px;
+#sideBarSizeBox {
+    margin-left:10%;
+    margin-top: 15px;
+    width: 35%;
     height: 100px;
     border: 1px solid black;
-}
-
-#contentColor {
     background-color: white;
-    border: 1px solid black;
-    width: 130px;
-    height: 100px;
-    margin-left: 15px;
-    margin-right: 5px;
-}
-
-#contentSize {
-    background-color: white;
-    width: 130px;
-    height: 100px;
-    border: 1px solid black;
 }
