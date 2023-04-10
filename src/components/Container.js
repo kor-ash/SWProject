@@ -5,6 +5,15 @@ import { ObjectsFactory } from '../factory/ObjectsFactory';
 import { findClickedCircle, findClickedVector } from '../Util';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateSelectedVector, updateSelectedCircle } from '../features/canvas/CanvasSlice';
+import 'react-contexify/ReactContexify.css';
+import {
+    Menu,
+    Item,
+    useContextMenu,
+    RightSlot,
+    Separator,
+} from 'react-contexify';
+
 const init = (canvasAarray) => {
     canvasAarray.forEach((canvas) => {
         canvas.width = window.innerHeight * 1.1;
@@ -15,6 +24,67 @@ const compositeObject = new CompositeObject();
 const canvasContext = CanvasContext.getInstance().context;
 const canvas = CanvasContext.getInstance().canvas;
 const Container = ({ curTool, handleUtensil, utensil }) => {
+
+    //=======
+    const redrawCanvas = (clk) => {
+        ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+        let sortedObjects;
+        // Sort the objects based on their z-index values in ascending order
+        if (clk)
+            sortedObjects = compositeObject.objects.sort((a, b) => a.props.zIndex - b.props.zIndex);
+        else
+            sortedObjects = compositeObject.objects.sort((a, b) => -(a.props.zIndex - b.props.zIndex));
+        // Draw the objects in the sorted order
+        sortedObjects.forEach(object => {
+            object.draw()
+        });
+        ctx.drawImage(lineDupRef.current, 0, 0);
+
+    }
+    const { show } = useContextMenu({ id: 'demo' });
+    const onClickMenu = ({ id }) => {
+        if (id === "delete") {
+            //삭제 로직
+            const newObjects = compositeObject.objects.filter(object => !object.props.isClicked);
+            compositeObject.objects = newObjects;
+            setSelectedVector([]);
+            setSelectedCircle([]);
+            dispatch(updateSelectedVector([]));
+            dispatch(updateSelectedCircle([]));
+        }
+        else if (id === "front") {
+            const clickedVector = compositeObject.objects.find(object => object.props.isClicked);
+            if (clickedVector) {
+                setRender(true)
+                // Update the z-index of the clicked vector to a higher value
+                clickedVector.props.zIndex = compositeObject.getHighestZIndex() + 1;
+                // Redraw the canvas based on the updated z-index values
+                redrawCanvas(true);
+            }
+        }
+        else if (id === "back") {
+            const clickedVector = compositeObject.objects.find(object => object.props.isClicked);
+            if (clickedVector) {
+                setRender(false)
+                // Update the z-index of the clicked vector to a higher value
+                clickedVector.props.zIndex = compositeObject.getLowestZIndex() - 1;
+                // Redraw the canvas based on the updated z-index values
+                redrawCanvas(false);
+            }
+        }
+        else {
+
+            const clickedVector = compositeObject.objects.find(object => object.props.isClicked);
+            if (clickedVector) {
+                // Update the z-index of the clicked vector to a higher value
+                clickedVector.props.color = utensil['color']
+                // Redraw the canvas based on the updated z-index values
+                redrawCanvas(true);
+            }
+        }
+    }
+    const [isRender, setRender] = useState(false)
+    //======
     const canvasRef = useRef(null);
     const dupRef = useRef(null);
     const lineDupRef = useRef(null); //line만 땀
@@ -48,13 +118,25 @@ const Container = ({ curTool, handleUtensil, utensil }) => {
     }, [utensil]);
 
     useEffect(() => {
-        compositeObject.draw();
+        if (ctx) {
+            //dup에서 지우고 다시그리자
+            ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+            compositeObject.draw();
+            const dupCanvas = dupRef.current;
+            const dupContext = dupCanvas.getContext("2d");
+            dupContext.clearRect(0, 0, dupRef.current.width, dupRef.current.height)
+            dupContext.drawImage(canvasRef.current, 0, 0);
+            ctx.drawImage(lineDupRef.current, 0, 0);
+        }
     }, [selectedVector, selectedCircle])
     //startDrawing
     const onMouseDown = ({ nativeEvent }) => {
         const { offsetX, offsetY } = nativeEvent;
         setStartPoint({ x: offsetX, y: offsetY });
+        const isLeftClick = nativeEvent.button === 0 ? true : false;
         if (curTool === "brush") {
+            if (!isLeftClick)
+                return;
             setIsDrawing(true);
             ctx.beginPath();
             ctx.moveTo(offsetX, offsetY);
@@ -78,6 +160,8 @@ const Container = ({ curTool, handleUtensil, utensil }) => {
                 dispatch(updateSelectedVector([]))
                 dispatch(updateSelectedCircle([]))
             }
+            if (!isLeftClick)
+                return;
             setIsMove(false)
             setIsDrawing(true);
 
@@ -92,6 +176,7 @@ const Container = ({ curTool, handleUtensil, utensil }) => {
                     color: utensil.color,
                     size: utensil.weight,
                     isClicked: false,
+                    zIndex: 0
                 });
                 compositeObject.add(object);
             }
@@ -109,7 +194,8 @@ const Container = ({ curTool, handleUtensil, utensil }) => {
                     ey: object.props.ey,
                     color: object.props.color,
                     size: object.props.size,
-                    isClicked: object.isClicked
+                    isClicked: object.isClicked,
+                    zIndex: 0
                 }
             })
             dispatch(updateSelectedVector(saveVector))
@@ -130,7 +216,8 @@ const Container = ({ curTool, handleUtensil, utensil }) => {
                     rad: object.props.rad,
                     color: object.props.color,
                     size: object.props.size,
-                    isClicked: object.isClicked
+                    isClicked: object.isClicked,
+                    zIndex: 0
                 }
             })
             compositeObject.objects.forEach((object) => {
@@ -146,7 +233,8 @@ const Container = ({ curTool, handleUtensil, utensil }) => {
     }
     const onMouseMove = ({ nativeEvent }) => {
         const { offsetX, offsetY } = nativeEvent;
-        if (isDrawing) {
+        const isLeftClick = nativeEvent.button === 0 ? true : false;
+        if (isDrawing && isLeftClick) {
             const object = compositeObject.objects[compositeObject.objects.length - 1];
             if (curTool === "vector") {
                 object.props.ex = offsetX
@@ -197,7 +285,9 @@ const Container = ({ curTool, handleUtensil, utensil }) => {
         }
     }
     const onMouseUp = ({ nativeEvent }) => {
-        if (isDrawing) {
+
+        const isLeftClick = nativeEvent.button === 0 ? true : false;
+        if (isDrawing && isLeftClick) {
             setIsDrawing(false)
             const { offsetX, offsetY } = nativeEvent;
             const objectType = (curTool === "vector") ? "vector" : (curTool === "circle" ? "circle" : "brush")
@@ -215,6 +305,7 @@ const Container = ({ curTool, handleUtensil, utensil }) => {
                 color: utensil.color,
                 size: utensil.weight,
                 isClicked: false,
+                zIndex: 0
             });
             const dupCanvas = dupRef.current;
             const dupContext = dupCanvas.getContext("2d");
@@ -241,16 +332,26 @@ const Container = ({ curTool, handleUtensil, utensil }) => {
 
 
     return (
-        <div style={{ display: "flex" }}>
-            <canvas
-                ref={canvasRef}
-                onMouseDown={onMouseDown}
-                onMouseUp={onMouseUp}
-                onMouseMove={onMouseMove}
-                style={{ border: "solid", backgroundColor: "white" }}
-            ></canvas>
-            <canvas id="c2" ref={dupRef} style={{ border: "solid", display: "none" }}></canvas>
-            <canvas id="c3" ref={lineDupRef} style={{ border: "solid", display: "none" }}></canvas>
+        <div >
+            <div style={{ display: "flex" }}>
+                <canvas
+                    onContextMenu={(e) => show({ event: e })}
+                    ref={canvasRef}
+                    onMouseDown={onMouseDown}
+                    onMouseUp={onMouseUp}
+                    onMouseMove={onMouseMove}
+                    style={{ border: "solid", backgroundColor: "white" }}
+                ></canvas>
+                <Menu id="demo">
+                    <Item id="delete" onClick={onClickMenu}>삭제</Item>
+                    <Separator />
+                    <Item id="front" onClick={onClickMenu}>앞으로 보내기</Item>
+                    <Item id="back" onClick={onClickMenu}>뒤로 보내기</Item>
+                    <Item id="changeColor" onClick={onClickMenu}>색깔 바꾸기</Item>
+                </Menu>
+                <canvas id="c2" ref={dupRef} style={{ border: "solid", display: "none" }}></canvas>
+                <canvas id="c3" ref={lineDupRef} style={{ border: "solid", display: "none" }}></canvas>
+            </div>
         </div>
     );
 };

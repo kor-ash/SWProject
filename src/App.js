@@ -39,8 +39,8 @@ function App() {
           <Container curTool={curTool} setCurTool={setCurTool} utensil={utensil} handleUtensil={handleUtensil} />
         </div>
         <div>
-          <SidebarHeader></SidebarHeader>
-          <Sidebar />
+          {/* <SidebarHeader></SidebarHeader>
+          <Sidebar /> */}
         </div>
       </div>
     </Provider>

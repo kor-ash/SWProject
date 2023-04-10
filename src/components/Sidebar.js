@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 
 const SideBarBox = ({ title, content }) => {
     const id = "sideBar" + title + "Box"
-    console.log(id)
     return (
         <div id={id}>
             <div id="sideBarBoxHeader">{title}</div>
