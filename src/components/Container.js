@@ -235,7 +235,19 @@ const Container = ({ curTool, handleUtensil, utensil }) => {
         const { offsetX, offsetY } = nativeEvent;
         const isLeftClick = nativeEvent.button === 0 ? true : false;
         if (isDrawing && isLeftClick) {
-            const object = compositeObject.objects[compositeObject.objects.length - 1];
+
+            //기존에는, 그냥 뒤에 넣어주니까 맨 뒤에 있는거의 ex,ey를 셋팅하면 됐음
+            //그러나, 앞으로, 뒤로 배치 기능이 생기고 부터는 배열이 정렬이 되기때문에 idx로 접근을 해야함
+            let idx=0;
+            for(let i=0;i<compositeObject.objects.length;i++)
+            {
+                if(compositeObject.objects[i].props.ex===undefined)
+                {
+                    idx=i;
+                    break;
+                }
+            }
+            const object = compositeObject.objects[idx];
             if (curTool === "vector") {
                 object.props.ex = offsetX
                 object.props.ey = offsetY;
